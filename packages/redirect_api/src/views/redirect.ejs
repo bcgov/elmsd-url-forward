@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" class="fill-height-md">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WorkBC Banner</title>
+  <!-- End Matomo Code -->
+  <!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    <% if (typeof(uid) !== "undefined") { %>
+      _paq.push(['setUserId', '<%= uid %>']);
+  <% } else if (messages.uid) { %>
+      _paq.push(['setUserId', '<%= messages.uid %>']);
+  <% } %>
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="<%= matomoUrl %>";
+    _paq.push(['setTrackerUrl', u+'matomo.php']);
+    _paq.push(['setSiteId', '<%= matomoId %>']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+    <script>
+      setTimeout(function () {
+         // after 500ms
+         window.location = "<%= rurl %>";
+      }, 300)
+  </script>
+  <noscript><meta http-equiv="refresh" content="3; url='<%= rurl %>'"><noscript>
+</head>
+<body>
+  <main role="main">
+    <div class="container">
+      
+    </div>
+  </main>
+</body>
+</html>
+
