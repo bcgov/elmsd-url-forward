@@ -1,0 +1,128 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  creationTimestamp: null
+  name: url-forward
+labels:
+  template: url-forward
+objects:
+- apiVersion: v1
+  kind: Secret
+  type: Opaque
+  metadata:
+    name: ${NAME}-db-secrets
+  stringData:
+    databaseUrl: ${{DATABASE_URL}}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-api
+    labels:
+      app.kubernetes.io/part-of: wage-sub-v2
+      app.openshift.io/runtime: nodejs
+      deploymentconfig: ${NAME}-api
+  spec:
+    replicas: ${{REPLICAS}}
+    selector:
+      deploymentconfig: ${NAME}-api
+    strategy:
+      resources:
+        limits:
+          cpu: 20m
+          memory: 80Mi
+        requests:
+          cpu: 10m
+          memory: 65Mi
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: ${NAME}-api
+      spec:
+        containers:
+        - env:
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: ${NAME}-db-secrets
+                key: databaseUrl
+          - name: MATOMO_URL
+            value: ${MATOMO_URL}
+          image: ${NAME}-api:${TAG}
+          livenessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8000
+            timeoutSeconds: 1
+          name: ${NAME}-api
+          ports:
+          - containerPort: 8000
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            initialDelaySeconds: 300
+            periodSeconds: 120
+            successThreshold: 1
+            tcpSocket:
+              port: 8000
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 20m
+              memory: 80Mi
+            requests:
+              cpu: 10m
+              memory: 65Mi
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${NAME}-api
+        from:
+          kind: ImageStreamTag
+          name: ${NAME}-api:${TAG}
+          namespace: ${IMAGE_NAMESPACE}
+      type: ImageChange
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: ${NAME}-api
+  spec:
+    ports:
+    - name: ${NAME}-api
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      deploymentconfig: ${NAME}-api
+parameters:
+- description: A name used for all objects
+  displayName: Name
+  name: NAME
+  required: true
+  value: url-forward
+- description: The number of replicas to create
+  displayName: Replicas
+  name: REPLICAS
+  required: true
+  value: "1"
+- description: Tag used for the image tags
+  displayName: tag
+  name: TAG
+  required: true
+  value: latest
+- description: DB connection string
+  displayName: DB connection string
+  name: DATABASE_URL
+  value: ""
+- description: Keycloak Server URL Dev
+  displayName: Keycloak Server URL
+  name: MATOMO_URL
+  value: ""
