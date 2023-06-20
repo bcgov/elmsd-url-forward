@@ -7,10 +7,11 @@ import "dotenv/config"
 
 import urlRouter from "./routes/url.route"
 
+// URL forwarding so all origins could be used
 const corsOptions = {
-  origin: process.env.ORIGIN_URL || process.env.OPENSHIFT_NODEJS_ORIGIN_URL || "http://localhost:3001",
-  credentials: true,
-  optionsSuccessStatus: 200
+    origin: "*",
+    credentials: true,
+    optionsSuccessStatus: 200
 }
 
 const app = express()
@@ -27,12 +28,12 @@ app.use(helmet())
 
 // health check
 app.get("/", (req: Express.Request, res: any) => {
-  res.send("Healthy!")
+    res.send("Healthy!")
 })
 
 app.use("/redirect", urlRouter)
 
-const port = process.env.PORT || "8002"
+const port = process.env.PORT || "8000"
 app.listen(port, () => {
-  console.info(`server started at :${port}`)
+    console.info(`server started at :${port}`)
 })
