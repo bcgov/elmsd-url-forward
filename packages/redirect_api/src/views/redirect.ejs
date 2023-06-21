@@ -30,9 +30,13 @@
       setTimeout(function () {
          // after 500ms
          window.location = "<%= rurl %>";
-      }, 300)
+      }, 500)
   </script>
-  <noscript><meta http-equiv="refresh" content="3; url='<%= rurl %>'"><noscript>
+  <noscript><meta http-equiv="refresh" content="5; url='<%= rurl %>'">
+  <!-- Matomo Image Tracker-->
+<img src="https://elmsd-matomo.apps.silver.devops.gov.bc.ca/matomo.php?idsite=<%= matomoId %>&amp;rec=1&amp;uid=<%= uid %>" style="border:0" alt="" />
+<!-- End Matomo -->
+  <noscript>
 </head>
 <body>
   <main role="main">
