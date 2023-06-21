@@ -10,10 +10,10 @@ objects:
   kind: ImageStream
   metadata:
     annotations:
-      name: ${NAME}${SUFFIX}
+      name: ${NAME}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
-    name: ${NAME}${SUFFIX}
+    name: ${NAME}-api
     creationTimestamp: null
     namespace: ${NAMESPACE}
     labels:
@@ -31,10 +31,10 @@ objects:
   kind: BuildConfig
   metadata:
     annotations:
-      name: ${NAME}${SUFFIX}
+      name: ${NAME}
       app.openshift.io/vcs-ref: ${SOURCE_REPOSITORY_REF}
       app.openshift.io/vcs-uri: ${SOURCE_REPOSITORY_URL}
-    name: ${NAME}${SUFFIX}
+    name: ${NAME}-api
     creationTimestamp: null
     namespace: ${NAMESPACE}
     labels:
@@ -45,7 +45,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: ${NAME}${SUFFIX}:${TAG}
+        name: ${NAME}-api:${TAG}
     successfulBuildsHistoryLimit: 5
     failedBuildsHistoryLimit: 5
     strategy:
@@ -101,7 +101,7 @@ parameters:
   displayName: SOURCE_REPOSITORY_REF
   name: SOURCE_REPOSITORY_REF
   required: true
-  value: next-claims
+  value: main
 - description: SOURCE_CONTEXT_DIR
   displayName: SOURCE_CONTEXT_DIR
   name: SOURCE_CONTEXT_DIR
