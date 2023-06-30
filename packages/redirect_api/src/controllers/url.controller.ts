@@ -4,7 +4,7 @@ import * as urlService from "../services/url.service"
 const getUrl = async (req: Request, res: Response) => {
     try {
         const { uuid } = req.params
-        const { uid } = req.query
+        const { uid, title } = req.query
         console.log(uuid, uid)
         if (!uid) return res.status(401).json({ message: "Need UID" })
         const url = await urlService.getUrl(uuid)
@@ -18,7 +18,7 @@ const getUrl = async (req: Request, res: Response) => {
                 "Content-Security-Policy",
                 "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'"
             )
-            .render("redirect", { uid, rurl, matomoId: url.matomoId, matomoUrl: process.env.MATOMO_URL })
+            .render("redirect", { uid, rurl, redirectTitle: title, matomoId: url.matomoId, matomoUrl: process.env.MATOMO_URL })
     } catch (error) {
         console.error(error)
         return res.status(500).json({ message: "Internal server error" })
