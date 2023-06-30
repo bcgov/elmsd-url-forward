@@ -9,7 +9,7 @@ const getUrl = async (req: Request, res: Response) => {
         if (!uid) return res.status(401).json({ message: "Need UID" })
         const url = await urlService.getUrl(uuid)
         if (!url) return res.status(401).json({ message: "URL not found" })
-        const queryParams = req.url.split("?")[1]
+        const queryParams = req.url.split("?")[1].replace("amp;", "")
         const rurl = `${url.url}?${queryParams}`
         console.log(rurl)
         return res
